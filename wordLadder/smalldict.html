@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body{
+            background-color:#d0e4fe;
+        }
+        p{
+            text-align: center;
+            font-size: 150%;
+        }
+        input{
+            font-size: 120%;
+        }
+        button{
+            font-size: 200%;
+            background-image: linear-gradient(#f5c153, #ea920d);
+            text-align: center;
+        }
+    </style>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+    <script>
+/*-----------------------------------------------------------------------
+*my dict stack queue class:
+*Dict: isHave(x)
+*Path:arr() set(arr) top() push(word) print()
+*Queue:push(x) pop() back() empty() back() print()
+*/      
+        //Dict: isHave(x)--------------------------------
+        function Dict(){
+            var dictionary=["abash",
+                    "aura",
+                    "awe",
+                    "bad",
+                    "bar",
+                    "barb",
+                    "bed",
+                    "bee",
+                    "beg",
+                    "bled",
+                    "blew",
+                    "blush",
+                    "bog",
+                    "bogus",
+                    "boo",
+                    "bough",
+                    "bow",
+                    "brew",
+                    "briar",
+                    "brow",
+                    "brush",
+                    "bug",
+                    "bugs",
+                    "bus",
+                    "bush",
+                    "bust",
+                    "busy",
+                    "but",
+                    "cad",
+                    "cade",
+                    "car",
+                    "cat",
+                    "cate",
+                    "code",
+                    "cog",
+                    "con",
+                    "cot",
+                    "data",
+                    "date",
+                    "dig",
+                    "dog",
+                    "don",
+                    "dot",
+                    "egg",
+                    "ego",
+                    "erg",
+                    "go",
+                    "goes",
+                    "gorge",
+                    "gosh",
+                    "grew",
+                    "grow",
+                    "grub",
+                    "gush",
+                    "he",
+                    "her",
+                    "here",
+                    "hew",
+                    "hub",
+                    "hug",
+                    "huh",
+                    "hush",
+                    "kitty",
+                    "owe",
+                    "past",
+                    "path",
+                    "push",
+                    "rub",
+                    "sew",
+                    "she",
+                    "shrub",
+                    "shrug",
+                    "sir",
+                    "sub",
+                    "surge",
+                    "swore",
+                    "war",
+                    "web",
+                    "wee",
+                    "were",
+                    "woe",
+                    "wore",
+                    "worse"];
+                var length=dictionary.length;
+            this.isHave=function(x){
+                var x=dictionary.indexOf(x);
+                if(x==-1){
+                    return false;
+                }else{
+                    return true;
+                }   
+            }
+        }
+        //Path:arr() set(arr) top() push(word) print()---------------------------
+        function Path(){
+            var wordList=[];
+
+            this.arr=function(){
+                return wordList;
+            }
+            this.set=function(arr){
+                wordList=[].concat(arr);
+            }
+            this.top=function(){
+                return wordList[wordList.length-1];
+            }
+            this.push=function(word){
+               
+                var flag=true;
+                for(var i=0;i<wordList.length;i++){
+                    if(wordList[i]==word){
+                        flag=false;
+                    }
+                }    
+                 alert("push:"+word+"\n"+"flag:"+flag);
+                if(flag){
+                    wordList[wordList.length]=word;
+                    alert("wordlist:"+wordList);
+                }
+                return flag;
+            }
+            this.print=function(){
+                var str="result:";
+                var result=document.getElementById("output");
+                for(var i=0;i<wordList.length;i++){
+                    str+=" "+wordList[i];
+                }
+                result.innerHTML=str;
+            }
+            this.out=function(){
+                alert("front:"+wordList+"\n"+"word:"+wordList[wordList.length-1]);
+            }
+            this.str=function(){
+                var str="";
+                for(var i=0;i<wordList.length;i++){
+                    str+=wordList[i]+",";
+                }
+                return str;
+            }
+        }
+        //Queue:push(x) pop() back() empty() back() print() ----------------------------------------------------
+        function Queue(){
+            var size=0;
+            var queue=new Array();
+            this.push=function(x){
+                queue[size]=x;
+                size+=1;
+            }
+            this.pop=function(){
+                var q=queue[0];
+                queue.reverse();
+                queue.pop();
+                queue.reverse();
+                size-=1;
+                return q;
+            }
+            this.empty=function(){
+                if(size==0){
+                    return true;
+                }
+                return false;
+            }
+            this.back=function(){
+                return queue[size-1];
+            }
+            this.length=function(){
+                return queue.length;
+            }
+            this.print=function(){
+                var testPrint=document.getElementById("test");
+                var str="Queue:";
+                for(var i=0; i<size ; i++){
+                    str+=queue[i]+" ";    
+                }
+                testPrint.innerHTML=str;
+            }
+            this.out=function(){
+                var str="Queue:";
+                for(var i=0; i<size ; i++){
+                    str+=queue[i].str()+"\n";    
+                }
+                alert(str);
+            }
+        }
+        
+/*-------------------------------------------------------------
+*functions:check(x) findWord(word,dict) findPath(word1,word2,dict) 
+*
+*/
+        //check whether the input is null or not 
+        function  check(dict){
+            var word1=document.getElementById("word1").value;
+            var word2=document.getElementById("word2").value;
+
+            if(word1==null || word2==null || word1=="" || word2==""){
+                alert("the input can't be null");
+                return false;
+            }
+            if(!dict.isHave(word1)||!dict.isHave(word2)){
+                alert("not all of them are words");
+                return false;
+            }
+            if(word1.length!=word2.length){
+                alert("their lengths are not the same");
+                return false;
+            }
+            return true;
+        }
+        //find possible next words
+        function findWord(word,dict){
+            var nextWords=new Array();
+            for(var i=0;i<word.length;i++){
+                for(var j=97;j<=122;j++){
+                    var w=word;
+                    w=w.split('');
+                    w[i]=String.fromCharCode(j);
+                    var str=w.join('');
+                    if(dict.isHave(str) && str!=word){
+                        nextWords[nextWords.length]=str;
+                    }
+                }
+            }
+            return nextWords;    
+        }    
+        
+        //find path between two words
+        function findPath(word1,word2,dict,pathQue){ 
+            //init PathQue-------------
+            var startPath=new Path();
+            startPath.push(word1);
+            pathQue.push(startPath);
+            //start loop---------------
+            while(!pathQue.empty()){
+                var frontPath=pathQue.pop();
+                var word=frontPath.top();
+                frontPath.out();
+                var nextWords=findWord(word,dict);
+                alert("nextwords:"+nextWords);
+                for(var i=0;i<nextWords.length;i++){
+                    var nextWord=nextWords[i];
+                    if(dict.isHave(nextWord)){
+                        var newPath=new Path();
+                        newPath.set(frontPath.arr());
+                        var flag=newPath.push(nextWord);
+                        if(flag){
+                            pathQue.push(newPath);    
+                        }
+                        if(nextWord==word2){
+                            return true;
+                        }
+                        pathQue.out();
+                    }
+                }
+            }
+            return false;    
+        }
+/*---------------------------------------------------------------
+*function:start()
+*/
+        //main function
+        function start(){
+            var dict=new Dict();
+            var flag=check(dict);
+            if(!flag){return ;}
+            
+            var word1=document.getElementById("word1").value;
+            var word2=document.getElementById("word2").value;
+            
+            var pathQue = new Queue(); 
+            var flag1=findPath(word1,word2,dict,pathQue);
+            if(flag1){
+                pathQue.back().print();
+            }else{
+                document.getElementById("output").innerHTML="no path";
+            }
+        }
+        
+/*
+*----------------------------------------------------------------
+*/
+    </script>
+</head>
+<body>
+    <br/><br/><br/>
+    <p style="align-content:center">word1:<input id="word1"></input></p>
+    <br/>
+    <p>word2:<input id="word2"></input></p>
+    <br/>
+    <div style="text-align:center">        
+    <button  onclick="start()">start</button>
+    </div>>
+    <p id ="output"></p>
+    <p id ="test"></p>
+
+    
+
+</body>
+</html>
